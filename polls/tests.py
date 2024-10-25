@@ -78,54 +78,36 @@ class MySeleniumTests(StaticLiveServerTestCase):
 		# 12. Comprovar que el títol de la pàgina és el que esperem
 		self.assertEqual(self.selenium.title , "Log in | Django site admin")
 
-		# 13. Iniciar sessió com a superusuari
+		# 13. Iniciar sessió com a usuari amb permisos staff
 		username_staff_input = self.selenium.find_element(By.NAME, "username")
-		username_staff_input.send_keys("isard")
+		username_staff_input.send_keys("jordi")
 		password_staff_input = self.selenium.find_element(By.NAME, "password")
-		password_staff_input.send_keys("pirineus")
+		password_staff_input.send_keys("eac2-1234")
 		self.selenium.find_element(By.XPATH,'//input[@value="Log in"]').click()
 
 		# 14. Testejar que hem entrat a l'admin panel comprovant el títol de la pàgina
 		self.assertEqual(self.selenium.title, "Site administration | Django site admin")
 
-		# 15. Accedir a la secció de gestió d'usuaris
-		self.selenium.find_element(By.LINK_TEXT, "Users").click()
+		# 15. Clicar en l'opció "Reset password"
+		self.selenium.find_element(By.LINK_TEXT, "CHANGE PASSWORD").click()
 
-		# 16. Testejar que hem entrat a l'admin panel comprovant el títol de la pàgina
-		self.assertEqual(self.selenium.title, "Select user to change | Django site admin")
+		# 16. Testejar que hem entrat al canvi de contrasenya de l'usuari jordi comprovant el títol de la pàgina
+		self.assertEqual(self.selenium.title, "Password change | Django site admin")
 
-		# 17. Comprovar que el nou usuari apareix a la llista d'usuaris
-		#search_input = self.selenium.find_element(By.NAME, "q")
-		#search_input.send_keys("jordi")
-		#search_input.send_keys(Keys.RETURN)
-
-		# 17. Comprovar que apareix el nom d'usuari 'jordi' en els resultats de la cerca
-		self.assertIn("jordi", self.selenium.page_source)
-
-		# 18. Entrar a l'usuari 'jordi'
-		user_link = self.selenium.find_element(By.LINK_TEXT, "jordi")
-		user_link.click()
-
-		# 19. Testejar que hem entrat a l'usuari jordi comprovant el títol de la pàgina
-		self.assertEqual(self.selenium.title, "jordi | Change user | Django site admin")
-
-		# 20. Clicar en l'opció "Reset password"
-		self.selenium.find_element(By.LINK_TEXT, "Reset password").click()
-
-		# 21. Testejar que hem entrat al canvi de contrasenya de l'usuari jordi comprovant el títol de la pàgina
-		self.assertEqual(self.selenium.title, "Change password: jordi | Django site admin")
-
-		# 22. Omplir les dades de la nova contrasenya
-		new_password1_input = self.selenium.find_element(By.NAME, "password1")
+		# 17. Omplir les dades de la nova contrasenya
+		old_password_input = self.selenium.find_element(By.NAME, "old_password")
+		old_password_input.send_keys("eac2-1234")
+		new_password1_input = self.selenium.find_element(By.NAME, "new_password1")
 		new_password1_input.send_keys("eac206112024")
-		new_password2_input = self.selenium.find_element(By.NAME, "password2")
+		new_password2_input = self.selenium.find_element(By.NAME, "new_password2")
 		new_password2_input.send_keys("eac206112024")
-		self.selenium.find_element(By.XPATH, '//input[@value="Change password"]').click()
+		self.selenium.find_element(By.XPATH, '//input[@value="Change my password"]').click()
 
-		# 23. Comprovar que la contrasenya s'ha desat correctament (per exemple, amb un missatge de confirmació)
-		self.assertIn("Password changed successfully", self.selenium.page_source)
+		# 18. Comprovar que la contrasenya s'ha desat correctament (per exemple, amb un missatge de confirmació)
+		self.assertIn("Password change successful", self.selenium.page_source)
+		#self.assertEqual(self.selenium.title, "Password change successful | Django site admin")
 
-		# 24. Testejar element que no existeix
+		# 19. Testejar element que no existeix
 		try:
 			self.selenium.find_element(By.XPATH, "//a[text()='Answers']")
 			assert False, "Trobat element que no hi ha de ser"
