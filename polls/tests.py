@@ -26,7 +26,7 @@ class MySeleniumTests(StaticLiveServerTestCase):
 		cls.selenium.quit()
 		super().tearDownClass()
 
-	def test_create_staff_user_and_change_passwd_via_admin(self):
+	def test_create_staff_user_and_change_passwd(self):
 	#Test per crear un usuari amb permisos de staff i modificar la contrasenya
 	#=========================================================================
 
